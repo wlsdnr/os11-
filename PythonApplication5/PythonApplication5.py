@@ -60,14 +60,27 @@ class MyApp(QWidget):
     def text_sorry_check(self):
         here=0
         where=0
+        num=0
+        
+        self.text2.clear()
+
         text=self.text.toPlainText()
-        if "오해" in text:
-            index_1=text.index('오해')
-            self.text2.setTextColor(QColor(255,0,0))
-            self.text2.append('오해')
-            self.text2.setTextColor(QColor(0,0,0))
-        self.text2.setText(text)
-        self.text2.append('오해')
+        leng=len(text)
+
+        for i in range (0,leng):
+            if text[i]=="오" and text[i+1]=="해":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+2
+                here=where
+                self.text2.setTextColor(QColor(255,0,0))
+                self.text2.setFontPointSize(15)
+                self.text2.insertPlainText('오해')
+                self.text2.setFontPointSize(10)
+                self.text2.setTextColor(QColor(0,0,0))
+
+        if leng!=where:
+            self.text2.insertPlainText(text[where:])
 
         
 
