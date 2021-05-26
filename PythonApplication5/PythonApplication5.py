@@ -5,12 +5,7 @@ from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QColor, QTextCursor
 
 from hanspell import spell_checker
-"""
-result = spell_checker.check(u'이문장은 한글로 작성됬습니다.')
-resss=result.checked
-res = result.as_dict()
-print(resss)
-"""
+
 
 class MyApp(QWidget):
 
@@ -37,7 +32,7 @@ class MyApp(QWidget):
         btn.resize(btn.sizeHint())
         btn.clicked.connect(self.text_spell_check)
 
-        btn2=QPushButton('나가기',self)
+        btn2=QPushButton('사과문 검사',self)
         btn2.resize(btn.sizeHint())
         btn2.clicked.connect(self.text_sorry_check)
 
@@ -73,16 +68,60 @@ class MyApp(QWidget):
                 self.text2.insertPlainText(text[here:where])
                 where=where+2
                 here=where
-                self.text2.setTextColor(QColor(255,0,0))
-                self.text2.setFontPointSize(15)
-                self.text2.insertPlainText('오해')
-                self.text2.setFontPointSize(10)
-                self.text2.setTextColor(QColor(0,0,0))
+                self.focus("오해")
+
+
+            if text[i]=="본" and text[i+1]=="의" and text[i+2]==" " and text[i+3]=="아" and text[i+4]=="니" and text[i+5]=="게":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+6
+                here=where
+                self.focus("본의 아니게")
+
+
+            if text[i]=="억" and text[i+1]=="울" :
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+2
+                here=where
+                self.focus("억울")
+            
+                
+
+            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="로" and text[i+3]=="는":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+4
+                here=where
+                self.focus("앞으로는")
+
+            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="론":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+3
+                here=where
+                self.focus("앞으론")
+
+            if text[i]=="하" and text[i+1]=="지" and text[i+2]=="만":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+3
+                here=where
+                self.focus("하지만")
+           
+
 
         if leng!=where:
             self.text2.insertPlainText(text[where:])
 
-        
+
+
+    def focus(self,a):
+        self.text2.setTextColor(QColor(255,0,0))
+        self.text2.setFontPointSize(15)
+        self.text2.insertPlainText(a)
+        self.text2.setFontPointSize(10)
+        self.text2.setTextColor(QColor(0,0,0))
 
 
 if __name__ == '__main__':
