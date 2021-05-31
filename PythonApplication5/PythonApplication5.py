@@ -20,12 +20,9 @@ class MyApp(QWidget):
         self.text=QTextEdit()
         self.text.setAcceptRichText(False)
 
-        self.text2=QTextEdit()
-        self.text2.setAcceptRichText(False)
 
 
-        grid.addWidget(self.text,0,0)
-        grid.addWidget(self.text2,0,2)
+        grid.addWidget(self.text,1,0)
         
 
         btn=QPushButton('맞춤법 검사',self)
@@ -37,8 +34,8 @@ class MyApp(QWidget):
         btn2.clicked.connect(self.text_sorry_check)
 
 
-        grid.addWidget(btn,0,1)
-        btn2.move(463,270)
+        grid.addWidget(btn,0,0)
+        grid.addWidget(btn2,0,0)
 
 
         self.setWindowTitle('사과문 검사기 beta')
@@ -50,22 +47,22 @@ class MyApp(QWidget):
         text=self.text.toPlainText()
         result = spell_checker.check(text)
         ress=result.checked
-        self.text2.setText(ress)
+        self.text.setText(ress)
 
     def text_sorry_check(self):
         here=0
         where=0
         num=0
         
-        self.text2.clear()
 
         text=self.text.toPlainText()
         leng=len(text)
+        self.text.clear()
 
         for i in range (0,leng):
             if text[i]=="오" and text[i+1]=="해":
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+2
                 here=where
                 self.focus("오해")
@@ -73,7 +70,7 @@ class MyApp(QWidget):
 
             if text[i]=="본" and text[i+1]=="의" and text[i+2]==" " and text[i+3]=="아" and text[i+4]=="니" and text[i+5]=="게":
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+6
                 here=where
                 self.focus("본의 아니게")
@@ -81,7 +78,7 @@ class MyApp(QWidget):
 
             if text[i]=="억" and text[i+1]=="울" :
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+2
                 here=where
                 self.focus("억울")
@@ -90,21 +87,21 @@ class MyApp(QWidget):
 
             if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="로" and text[i+3]=="는":
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+4
                 here=where
                 self.focus("앞으로는")
 
             if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="론":
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+3
                 here=where
                 self.focus("앞으론")
 
             if text[i]=="하" and text[i+1]=="지" and text[i+2]=="만":
                 where=i
-                self.text2.insertPlainText(text[here:where])
+                self.text.insertPlainText(text[here:where])
                 where=where+3
                 here=where
                 self.focus("하지만")
@@ -112,16 +109,16 @@ class MyApp(QWidget):
 
 
         if leng!=where:
-            self.text2.insertPlainText(text[where:])
+            self.text.insertPlainText(text[where:])
 
 
 
     def focus(self,a):
-        self.text2.setTextColor(QColor(255,0,0))
-        self.text2.setFontPointSize(15)
-        self.text2.insertPlainText(a)
-        self.text2.setFontPointSize(10)
-        self.text2.setTextColor(QColor(0,0,0))
+        self.text.setTextColor(QColor(255,0,0))
+        self.text.setFontPointSize(15)
+        self.text.insertPlainText(a)
+        self.text.setFontPointSize(10)
+        self.text.setTextColor(QColor(0,0,0))
 
 
 if __name__ == '__main__':
