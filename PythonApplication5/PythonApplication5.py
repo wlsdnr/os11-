@@ -20,9 +20,11 @@ class MyApp(QWidget):
         self.text=QTextEdit()
         self.text.setAcceptRichText(False)
 
-
+        self.text2=QTextEdit()
+        self.text2.setAcceptRichText(False)
 
         grid.addWidget(self.text,1,0)
+        grid.addWidget(self.text2,1,1)
         
 
         btn=QPushButton('맞춤법 검사',self)
@@ -44,35 +46,10 @@ class MyApp(QWidget):
 
     
     def text_spell_check(self):
-        i=0
         text=self.text.toPlainText()
-        result = spell_checker.check(text)
-        ress=''
-        for key,value in result.words.items():
-            if value==0:
-                if i==0:
-                    ress=ress+key
-                else:
-                    ress=ress+' '+key
-            elif value==1:
-                if i==0:
-                    ress=ress+'('+result.original+')'+key
-                else:
-                    ress=ress+' ('+result.original+')'+key
-            else:
-                if i==0:
-                    ress=ress+key
-                else:
-                    ress=ress+' '+key
-            i=i+1
-        """
-        PASSED = 0
-        WRONG_SPELLING = 1
-        WRONG_SPACING = 2
-        AMBIGUOUS = 3
-        STATISTICAL_CORRECTION = 4
-        """
-        self.text.setText(ress)
+        result=spell_checker.check(text)
+        ress=result.checked
+        self.text2.setText(ress)
         
     def text_sorry_check(self):
         here=0
