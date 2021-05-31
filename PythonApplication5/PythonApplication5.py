@@ -35,7 +35,7 @@ class MyApp(QWidget):
 
 
         grid.addWidget(btn,0,0)
-        grid.addWidget(btn2,0,0)
+        grid.addWidget(btn2,0,1)
 
 
         self.setWindowTitle('사과문 검사기 beta')
@@ -44,11 +44,36 @@ class MyApp(QWidget):
 
     
     def text_spell_check(self):
+        i=0
         text=self.text.toPlainText()
         result = spell_checker.check(text)
-        ress=result.checked
+        ress=''
+        for key,value in result.words.items():
+            if value==0:
+                if i==0:
+                    ress=ress+key
+                else:
+                    ress=ress+' '+key
+            elif value==1:
+                if i==0:
+                    ress=ress+'('+result.original+')'+key
+                else:
+                    ress=ress+' ('+result.original+')'+key
+            else:
+                if i==0:
+                    ress=ress+key
+                else:
+                    ress=ress+' '+key
+            i=i+1
+        """
+        PASSED = 0
+        WRONG_SPELLING = 1
+        WRONG_SPACING = 2
+        AMBIGUOUS = 3
+        STATISTICAL_CORRECTION = 4
+        """
         self.text.setText(ress)
-
+        
     def text_sorry_check(self):
         here=0
         where=0
