@@ -1,16 +1,16 @@
 
 import sys
-from PyQt5.QtWidgets import QApplication,QWidget,QPushButton, QGridLayout, QTextEdit, QMainWindow
+from PyQt5.QtWidgets import QApplication,QWidget,QPushButton, QGridLayout, QTextEdit, QMainWindow, QLabel
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QColor, QTextCursor
 
+from module1 import text_sorry
 from hanspell import spell_checker
-"""
-result = spell_checker.check(u'이문장은 한글로 작성됬습니다.')
-resss=result.checked
-res = result.as_dict()
-print(resss)
-"""
+
+import clipboard
+
+
+
 
 class MyApp(QWidget):
 
@@ -28,48 +28,80 @@ class MyApp(QWidget):
         self.text2=QTextEdit()
         self.text2.setAcceptRichText(False)
 
+        self.text3=QLabel('')
 
-        grid.addWidget(self.text,0,0)
-        grid.addWidget(self.text2,0,2)
+        self.text.setMaximumWidth(350)
+        self.text2.setMaximumWidth(350)
+
+        grid.addWidget(self.text,0,0,1,1)
+        grid.addWidget(self.text2,0,1,1,1)
+        grid.addWidget(self.text3,0,2,1,1)
         
 
         btn=QPushButton('맞춤법 검사',self)
         btn.resize(btn.sizeHint())
         btn.clicked.connect(self.text_spell_check)
 
-        btn2=QPushButton('나가기',self)
+        btn2=QPushButton('사과문 검사',self)
         btn2.resize(btn.sizeHint())
         btn2.clicked.connect(self.text_sorry_check)
 
+        btn3=QPushButton('입력칸에 붙여넣기',self)
+        btn3.resize(btn.sizeHint())
+        btn3.clicked.connect(self.text_move)
 
-        grid.addWidget(btn,0,1)
-        btn2.move(463,270)
+        btn4=QPushButton('비우기',self)
+        btn4.resize(btn.sizeHint())
+        btn4.clicked.connect(self.clear_1)
 
+        btn5=QPushButton('비우기',self)
+        btn5.resize(btn.sizeHint())
+        btn5.clicked.connect(self.clear_2)
+        
+        btn6=QPushButton('클립보드에 복사',self)
+        btn6.resize(btn.sizeHint())
+        btn6.clicked.connect(self.copy)
+
+        grid.addWidget(btn,1,0,1,1)
+        grid.addWidget(btn2,1,1,1,1)
+        grid.addWidget(btn3,1,2,1,1)
+
+        grid.addWidget(btn4,2,0,1,1)
+        grid.addWidget(btn5,2,1,1,1)
+        grid.addWidget(btn6,2,2,1,1)
 
         self.setWindowTitle('사과문 검사기 beta')
         self.setGeometry(300,100,1000,500)
         self.show()
 
-    
+
+
+
     def text_spell_check(self):
         text=self.text.toPlainText()
-        result = spell_checker.check(text)
+        result=spell_checker.check(text)
         ress=result.checked
-        self.text2.setText(ress)
+        self.text2.insertPlainText(ress)
 
     def text_sorry_check(self):
-        here=0
-        where=0
+        self.text3.clear()
         text=self.text.toPlainText()
-        if "오해" in text:
-            index_1=text.index('오해')
-            self.text2.setTextColor(QColor(255,0,0))
-            self.text2.append('오해')
-            self.text2.setTextColor(QColor(0,0,0))
-        self.text2.setText(text)
-        self.text2.append('오해')
+        text_sorry(self,text)
 
-        
+
+    def text_move(self):
+        self.text.setText(clipboard.paste())
+
+    def clear_1(self):
+        self.text.clear()
+
+    def clear_2(self):
+        self.text2.clear()
+
+    def copy(self):
+        text=self.text2.toPlainText()
+        clipboard.copy(text)
+
 
 
 if __name__ == '__main__':
