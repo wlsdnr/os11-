@@ -1,13 +1,28 @@
+from PyQt5.QtGui import QColor, QTextCursor
+
+
+
+
 
 
 def focus(self,text):
-    a=1
+    self.text2.setTextColor(QColor(255,0,0))
+    self.text2.setFontPointSize(15)
+    self.text2.insertPlainText(text)
+    self.text2.setFontPointSize(10)
+    self.text2.setTextColor(QColor(0,0,0))
 
 def text_sorry(self,text):
         here=0
         where=0
         num=0
         count=0
+
+
+        jalmot=0
+        future=0
+        real=0
+
 
         leng=len(text)
         self.text2.clear()
@@ -18,8 +33,11 @@ def text_sorry(self,text):
                 self.text2.insertPlainText(text[here:where])
                 where=where+2
                 here=where
-                self.focus("오해")
+                focus(self,"오해")
                 count=count+1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
 
 
             if text[i]=="본" and text[i+1]=="의" and text[i+2]==" " and text[i+3]=="아" and text[i+4]=="니" and text[i+5]=="게":
@@ -27,45 +45,95 @@ def text_sorry(self,text):
                 self.text2.insertPlainText(text[here:where])
                 where=where+6
                 here=where
-                self.focus("본의 아니게")
+                focus(self,"본의 아니게")
                 count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
             
             if text[i]=="억" and text[i+1]=="울" :
                 where=i
                 self.text2.insertPlainText(text[here:where])
                 where=where+2
                 here=where
-                self.focus("억울")
+                focus(self,"억울")
                 count+=1
-            
-                
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
 
-            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="로" and text[i+3]=="는":
+            if text[i]=="그" and text[i+1]=="럴":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+2
+                here=where
+                focus(self,"그럴")
+                count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
+
+            if text[i]=="고" and text[i+1]=="려" and text[i+2]=="해" and text[i+3]=="보" and text[i+4]=="겠" and text[i+5]=="습" and text[i+6]=="니" and text[i+7]=="다":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+8
+                here=where
+                focus(self,"고려해보겠습니다")
+                count+=1
+                if future==0:
+                    solve=solve+"보다 구체적인 계획을 이야기하기.\n"
+                    future=1
+
+
+            if text[i]=="의" and text[i+1]=="도" and text[i+2]=="가":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+3
+                here=where
+                focus(self,"의도가")
+                count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
+
+            if text[i]=="의" and text[i+1]=="도" and text[i+2]=="와" and text[i+3]=="는":
                 where=i
                 self.text2.insertPlainText(text[here:where])
                 where=where+4
                 here=where
-                self.focus("앞으로는")
+                focus(self,"의도와는")
                 count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
 
-            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="론":
+
+            if text[i]=="사" and text[i+1]=="실" and text[i+2]==" " and text[i+3]=="여" and text[i+4]=="부" and text[i+5]=="를" and text[i+6]==" " and text[i+7]=="떠" and text[i+8]=="나":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+9
+                here=where
+                focus(self,"사실 여부를 떠나")
+                count+=1
+                if real==0:
+                    solve=solve+"오해의 여지가 있는 문구 피하기.\n"
+                    real=1
+
+            if text[i]=="고" and text[i+1]=="의" and text[i+2]=="가":
                 where=i
                 self.text2.insertPlainText(text[here:where])
                 where=where+3
                 here=where
-                self.focus("앞으론")
+                focus(self,"고의가")
                 count+=1
-
-            if text[i]=="하" and text[i+1]=="지" and text[i+2]=="만":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+3
-                here=where
-                self.focus("하지만")
-                count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
            
         if leng!=where:
             self.text2.insertPlainText(text[where:])
 
         if count==0:
             self.text3.setText("PASS")
+        else:
+            self.text3.setText(solve)
