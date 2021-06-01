@@ -23,7 +23,7 @@ def text_sorry(self,text):
         future=0
         real=0
 
-
+        solve=''
         leng=len(text)
         self.text2.clear()
 
