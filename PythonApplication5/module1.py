@@ -23,7 +23,7 @@ def text_sorry(self,text):
         future=0
         real=0
 
-        solve=''
+        solve='문제가 된 이유를 밝혔는가.\n진실된 반성이 있는가.\n문제 해결을 위한 계획이 있는가\n\n\n'
         leng=len(text)
         self.text2.clear()
 
@@ -130,10 +130,34 @@ def text_sorry(self,text):
                     solve=solve+"자신이 잘못 한 것을 인정하기.\n"
                     jalmot=1
            
+            if text[i]=="일" and text[i+1]=="이" and text[i+2]==" " and text[i+3]=="이" and text[i+4]=="렇" and text[i+5]=="게" and text[i+6]==" " and text[i+7]=="된" and text[i+7]==" " and text[i+7]=="점":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+10
+                here=where
+                focus(self,"일이 이렇게 된 점")
+                count+=1
+                if future==0:
+                    solve=solve+"책임을 회피하지 않기.\n"
+                    future=1
+
+            if text[i]=="어" and text[i+1]=="쨌" and text[i+2]=="든":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+3
+                here=where
+                focus(self,"어쨌든")
+                count+=1
+                if jalmot==0:
+                    solve=solve+"자신이 잘못 한 것을 인정하기.\n"
+                    jalmot=1
+
         if leng!=where:
             self.text2.insertPlainText(text[where:])
 
         if count==0:
-            self.text3.setText("PASS")
+            solve=solve+"금지어 적발 횟수:0, PASS"
+            self.text3.setText(solve)
         else:
+            solve=solve+"금지어 적발 횟수:"+str(count)
             self.text3.setText(solve)
