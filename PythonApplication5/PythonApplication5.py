@@ -1,30 +1,15 @@
 
 import sys
-from PyQt5.QtWidgets import QApplication,QWidget,QPushButton, QGridLayout, QTextEdit, QMainWindow
+from PyQt5.QtWidgets import QApplication,QWidget,QPushButton, QGridLayout, QTextEdit, QMainWindow, QLabel
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QColor, QTextCursor
 
+from module1 import text_sorry
 from hanspell import spell_checker
-import json
-import urllib
-from bs4 import BeautifulSoup
+
+import clipboard
 
 
-def spellchecker(q):
-
-    params = urllib.parse.urlencode({
-        "_callback": "",
-        "q": q
-    })
-    
-    # 네이버 맞춤법 검사기 사용하여 문법 교정 
-    data = urllib.request.urlopen("https://m.search.naver.com/p/csearch/ocontent/spellchecker.nhn?" + params)
-    data = data.read().decode("utf-8")[1:-2]
-    data = json.loads(data)
-    data = data["message"]["result"]["html"]
-    data = BeautifulSoup(data, "html.parser").getText()
-    
-    return data
 
 
 class MyApp(QWidget):
@@ -43,9 +28,14 @@ class MyApp(QWidget):
         self.text2=QTextEdit()
         self.text2.setAcceptRichText(False)
 
-        grid.addWidget(self.text,1,0)
-        grid.addWidget(self.text2,1,1)
-        
+        self.text3=QLabel('')
+
+        self.text.setMaximumWidth(350)
+        self.text2.setMaximumWidth(350)
+
+        grid.addWidget(self.text,0,0,1,1)
+        grid.addWidget(self.text2,0,1,1,1)
+        grid.addWidget(self.text3,0,2,1,1)
         
 
         btn=QPushButton('맞춤법 검사',self)
@@ -56,10 +46,29 @@ class MyApp(QWidget):
         btn2.resize(btn.sizeHint())
         btn2.clicked.connect(self.text_sorry_check)
 
+        btn3=QPushButton('입력칸에 붙여넣기',self)
+        btn3.resize(btn.sizeHint())
+        btn3.clicked.connect(self.text_move)
 
-        grid.addWidget(btn,0,0)
-        grid.addWidget(btn2,0,1)
+        btn4=QPushButton('비우기',self)
+        btn4.resize(btn.sizeHint())
+        btn4.clicked.connect(self.clear_1)
 
+        btn5=QPushButton('비우기',self)
+        btn5.resize(btn.sizeHint())
+        btn5.clicked.connect(self.clear_2)
+        
+        btn6=QPushButton('클립보드에 복사',self)
+        btn6.resize(btn.sizeHint())
+        btn6.clicked.connect(self.copy)
+
+        grid.addWidget(btn,1,0,1,1)
+        grid.addWidget(btn2,1,1,1,1)
+        grid.addWidget(btn3,1,2,1,1)
+
+        grid.addWidget(btn4,2,0,1,1)
+        grid.addWidget(btn5,2,1,1,1)
+        grid.addWidget(btn6,2,2,1,1)
 
         self.setWindowTitle('사과문 검사기 beta')
         self.setGeometry(300,100,1000,500)
@@ -71,128 +80,28 @@ class MyApp(QWidget):
     def text_spell_check(self):
         text=self.text.toPlainText()
         result=spell_checker.check(text)
-        self.text2.clear()
-        i=0
-        for key,value in result.words.items():
-            if value==0:
-                if i!=0:
-                    self.text2.insertPlainText(" ")
-                self.text2.insertPlainText(key)
-            elif value==1:
-                if i!=0:
-                    self.text2.insertPlainText(" ")
-                self.focus2_red(key)
-            elif value==2:
-                if i!=0:
-                    self.text2.insertPlainText(" ")
-                self.focus2_green(key)
-            elif value==3:
-                if i!=0:
-                    self.text2.insertPlainText(" ")
-                self.focus2_purple(key)
-            elif value==4:
-                if i!=0:
-                    self.text2.insertPlainText(" ")
-                self.focus2_blue(key)
-            i=i+1
+        ress=result.checked
+        self.text2.insertPlainText(ress)
+
     def text_sorry_check(self):
-        here=0
-        where=0
-        num=0
-        
-
+        self.text3.clear()
         text=self.text.toPlainText()
-        leng=len(text)
+        text_sorry(self,text)
+
+
+    def text_move(self):
+        self.text.setText(clipboard.paste())
+
+    def clear_1(self):
+        self.text.clear()
+
+    def clear_2(self):
         self.text2.clear()
 
-        for i in range (0,leng):
-            if text[i]=="오" and text[i+1]=="해":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+2
-                here=where
-                self.focus2_red("오해")
+    def copy(self):
+        text=self.text2.toPlainText()
+        clipboard.copy(text)
 
-
-            if text[i]=="본" and text[i+1]=="의" and text[i+2]==" " and text[i+3]=="아" and text[i+4]=="니" and text[i+5]=="게":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+6
-                here=where
-                self.focus2_red("본의 아니게")
-
-            
-            if text[i]=="억" and text[i+1]=="울" :
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+2
-                here=where
-                self.focus2_red("억울")
-            
-                
-
-            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="로" and text[i+3]=="는":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+4
-                here=where
-                self.focus2_red("앞으로는")
-
-            if text[i]=="앞" and text[i+1]=="으" and text[i+2]=="론":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+3
-                here=where
-                self.focus2_red("앞으론")
-
-            if text[i]=="하" and text[i+1]=="지" and text[i+2]=="만":
-                where=i
-                self.text2.insertPlainText(text[here:where])
-                where=where+3
-                here=where
-                self.focus2_red("하지만")
-           
-
-
-        if leng!=where:
-            self.text.insertPlainText(text[where:])
-
-
-
-    def focus(self,a):
-        self.text.setTextColor(QColor(255,0,0))
-        self.text.setFontPointSize(15)
-        self.text.insertPlainText(a)
-        self.text.setFontPointSize(10)
-        self.text.setTextColor(QColor(0,0,0))
-
-    def focus2_red(self,a):
-        self.text2.setTextColor(QColor(255,0,0))
-        self.text2.setFontPointSize(15)
-        self.text2.insertPlainText(a)
-        self.text2.setFontPointSize(10)
-        self.text2.setTextColor(QColor(0,0,0))
-
-    def focus2_green(self,a):
-        self.text2.setTextColor(QColor(0,255,0))
-        self.text2.setFontPointSize(15)
-        self.text2.insertPlainText(a)
-        self.text2.setFontPointSize(10)
-        self.text2.setTextColor(QColor(0,0,0))
-
-    def focus2_blue(self,a):
-        self.text2.setTextColor(QColor(0,0,255))
-        self.text2.setFontPointSize(15)
-        self.text2.insertPlainText(a)
-        self.text2.setFontPointSize(10)
-        self.text2.setTextColor(QColor(0,0,0))
-
-    def focus2_purple(self,a):
-        self.text2.setTextColor(QColor(255,0,255))
-        self.text2.setFontPointSize(15)
-        self.text2.insertPlainText(a)
-        self.text2.setFontPointSize(10)
-        self.text2.setTextColor(QColor(0,0,0))
 
 
 if __name__ == '__main__':
