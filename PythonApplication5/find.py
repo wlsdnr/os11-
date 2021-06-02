@@ -152,6 +152,28 @@ def text_sorry(self,text):
                     solve=solve+"자신이 잘못 한 것을 인정하기.\n"
                     jalmot=1
 
+            if text[i]=="두" and text[i+1]=="려" and text[i+2]=="워":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+3
+                here=where
+                focus(self,"두려워")
+                count+=1
+                if jalmot==0:
+                    solve=solve+"자신의 감정을 나타내지 않기.\n"
+                    jalmot=1 
+
+            if text[i]=="우" and text[i+1]=="울":
+                where=i
+                self.text2.insertPlainText(text[here:where])
+                where=where+2
+                here=where
+                focus(self,"우울")
+                count+=1
+                if jalmot==0:
+                    solve=solve+"자신의 감정을 나타내지 않기.\n"
+                    jalmot=1
+
         if leng!=where:
             self.text2.insertPlainText(text[where:])
 

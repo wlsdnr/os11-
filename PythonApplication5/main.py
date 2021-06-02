@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QApplication,QWidget,QPushButton, QGridLayout, QText
 from PyQt5.QtCore import QCoreApplication, Qt
 from PyQt5.QtGui import QColor, QTextCursor
 
-from module1 import text_sorry
+from find import text_sorry
 from hanspell import spell_checker
 
 import clipboard
